@@ -8,9 +8,6 @@ import com.org.user.util.UserConverter;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-
-import javax.transaction.Transactional;
-
 @Service
 @AllArgsConstructor
 public class UserApplication {
@@ -18,8 +15,11 @@ public class UserApplication {
     private final UserConverter userConverter;
     private final UserService userService;
 
-    @Transactional
     public UserDto findByEmail(String email, TokenDto token) {
         return userConverter.convert(userService.findByEmail(email), token);
+    }
+
+    public UserDto findByEmail(String email) {
+        return userConverter.convert(userService.findByEmail(email));
     }
 }

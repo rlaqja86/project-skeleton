@@ -93,8 +93,8 @@ curl -X POST http://localhost:8080/api/v1/auth/sms?phoneNumber=01049249971
 
 curl --header "Content-Type: application/json" --request POST --data '{
 "signUpNextUrl":"kim beom",
-"accessToken":"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwMTA0OTI0OTk3MSIsImlhdCI6MTY3MDE0NTUwOSwiZXhwIjoxNjcwMTQ2MTA5fQ.AdObvV5y9VnedMlxehZ_Khvoq3UF_sA3sDi5s1Vt9NM", 
-"smsVerificationCode" : "0622", 
+"accessToken":"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwMTA0OTI0OTk3MSIsImlhdCI6MTY3MDE0Nzg1NywiZXhwIjoxNjcwMTQ4NDU3fQ.s4BxjdrGB3LVkUmsM6j6l7cNW1XlKmLKyPXZOX1mQBY", 
+"smsVerificationCode" : "0451", 
 "command" : "REGISTRATION"
 }' localhost:8080/api/v1/auth/sms/code
                                                                       
@@ -102,13 +102,13 @@ curl --header "Content-Type: application/json" --request POST --data '{
 #### sign up (POST http://localhost:8080/api/v1/auth/sign-up/registration)
 
 curl --header "Content-Type: application/json" --request POST --data '{
-"email":"k1b2119@naver.com",
+"email":"k1b219@naver.com",
 "nickName":"beom",
 "password" :"1234",
 "name":"beom",
 "phoneNumber":"01049249971",
 "tokenDto": {
-    "accessToken" : "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwMTA0OTI0OTk3MSIsImlhdCI6MTY3MDE0NTUwOSwiZXhwIjoxNjcwMTQ2MTA5fQ.AdObvV5y9VnedMlxehZ_Khvoq3UF_sA3sDi5s1Vt9NM",
+    "accessToken" : "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwMTA0OTI0OTk3MSIsImlhdCI6MTY3MDE0Nzg1NywiZXhwIjoxNjcwMTQ4NDU3fQ.s4BxjdrGB3LVkUmsM6j6l7cNW1XlKmLKyPXZOX1mQBY",
     "refreshToken" : ""
 }
 }' localhost:8080/api/v1/auth/sign-up/registration
@@ -139,6 +139,10 @@ curl --header "Content-Type: application/json" --request POST --data '{
 #### token reissue (GET http://localhost:8080/api/v1/auth/token/reissue)
 
 curl --request GET localhost:8080/api/v1/auth/token/reissue?refreshToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJrMWIyMTlAbmF2ZXIuY29tIiwiaWF0IjoxNjcwMTQyOTk0LCJleHAiOjE2NzA3NDc3OTR9.D_3jGYf4YuTvdLBMGVile426rq8BdHcw1hKgPeG9lyw
+
+### get user info (GET http://localhost:8080/api/v1/user)
+
+curl --header "Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJrMWIyMTlAbmF2ZXIuY29tIiwiaWF0IjoxNjcwMTQ4MzMyLCJleHAiOjE2NzAxNDg5MzJ9.lswEp1dSbwVAv7DiBq4hKgyNvaAysTcgmzAiELoXWbw" --request GET localhost:8080/api/v1/user?email=k1b219@naver.com
 
 #### Test (GET http://localhost:8080/api/v1/hello)
 
