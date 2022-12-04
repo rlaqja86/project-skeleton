@@ -1,5 +1,6 @@
 package com.org.user.config.jwt
 
+import com.org.user.model.constraint.TimeConstraint
 import spock.lang.Specification
 
 class JwtTokenProviderTest extends Specification {
@@ -9,7 +10,7 @@ class JwtTokenProviderTest extends Specification {
         given:
         String targetKey = "test"
         when:
-        String accessToken = sut.generate(targetKey)
+        String accessToken = sut.generate(targetKey, TimeConstraint.ACCESS_TOKEN_DURATION)
         then:
         accessToken != null
         accessToken.size() == 129
@@ -18,7 +19,7 @@ class JwtTokenProviderTest extends Specification {
     def "verify JwtTokenProvider return value of accessToken" () {
         given:
         String targetKey = "test"
-        String accessToken = sut.generate(targetKey)
+        String accessToken = sut.generate(targetKey, TimeConstraint.ACCESS_TOKEN_DURATION)
         when:
         String value = sut.getValue(accessToken)
         then:
@@ -29,7 +30,7 @@ class JwtTokenProviderTest extends Specification {
     def "verify JwtTokenProvider validate accessToken" () {
         given:
         String targetKey = "test"
-        String accessToken = sut.generate(targetKey)
+        String accessToken = sut.generate(targetKey, TimeConstraint.ACCESS_TOKEN_DURATION)
         when:
         Boolean value = sut.validate(accessToken)
         then:

@@ -5,6 +5,10 @@ MySql,
 Redis(embedded),
 JWT,
 Spock,
+#How to Run
+root 디렉토리에 sh deploy.sh 로 jar 로컬에 배포
+
+혹은 IntelliJ에 Project Import 후 Application실행
 #Design
 
 ###SMS인증
@@ -147,3 +151,4 @@ curl --header "Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJrMWIyMTlAbm
 #### Test (GET http://localhost:8080/api/v1/hello)
 
 curl --header "Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJrMWIyMTlAbmF2ZXIuY29tIiwiaWF0IjoxNjcwMTQyOTk0LCJleHAiOjE2NzA3NDc3OTR9.D_3jGYf4YuTvdLBMGVile426rq8BdHcw1hKgPeG9lyw" --request GET localhost:8080/api/v1/hello
+

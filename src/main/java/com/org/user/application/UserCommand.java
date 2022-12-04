@@ -2,10 +2,12 @@ package com.org.user.application;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.util.StringUtils;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 public enum UserCommand {
     REGISTRATION("/api/v1/auth/sign-up/registration"),
     CHANGE_PASSWORD("/api/v1/auth/sign-up/reset/password"),

@@ -1,6 +1,7 @@
 package com.org.user.util
 
 import com.org.user.entity.User
+import com.org.user.model.dto.TokenDto
 import com.org.user.model.dto.UserDto
 import org.springframework.security.crypto.factory.PasswordEncoderFactories
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -12,9 +13,10 @@ class UserConverterTest extends Specification {
 
     def "verify UserConverter convert userDto to user"() {
         given :
+        TokenDto tokenDto = TokenDto.builder().accessToken("access").refreshToken("refresh").build()
         UserDto dto = UserDto.builder()
                 .name("kimbeom")
-                .accessToken("accessToken")
+                .tokenDto(tokenDto)
                 .email("k1b219@naver.com")
                 .phoneNumber("01049249971")
                 .nickName("nick")
@@ -57,8 +59,9 @@ class UserConverterTest extends Specification {
                 .phoneNumber("01049249971")
                 .nickName("nick")
                 .password(encoder.encode("1234")) .build()
+        TokenDto tokenDto = TokenDto.builder().accessToken("access").refreshToken("refresh").build()
         when:
-        UserDto userDto = sut.convert(user, "token")
+        UserDto userDto = sut.convert(user, tokenDto)
 
         then:
         userDto.getName() == "kimbeom"
@@ -66,6 +69,7 @@ class UserConverterTest extends Specification {
         userDto.getPhoneNumber() == "01049249971"
         userDto.getNickName() == "nick"
         userDto.getPassword() == user.getPassword()
-        userDto.getAccessToken() == "token"
+        userDto.getTokenDto().getAccessToken() == "access"
+        userDto.getTokenDto().getRefreshToken() == "refresh"
     }
 }
