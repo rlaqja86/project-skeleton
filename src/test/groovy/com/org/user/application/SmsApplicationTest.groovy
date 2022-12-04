@@ -2,6 +2,7 @@ package com.org.user.application
 
 import com.org.user.config.jwt.JwtTokenProvider
 import com.org.user.exception.SmsException
+import com.org.user.model.constraint.TimeConstraint
 import com.org.user.model.dto.SignUpDto
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.data.redis.core.ValueOperations
@@ -19,7 +20,7 @@ class SmsApplicationTest extends Specification {
     def "test sendSMSAuthCode verify normal case result"() {
         given:
         redisTemplate.opsForValue() >> valueOperations
-        jwtTokenProvider.generate("01049249971") >> "token"
+        jwtTokenProvider.generate("01049249971", TimeConstraint.ACCESS_TOKEN_DURATION) >> "token"
         smsRandomCodeGenerator.generateRandomCode() >> "1111"
         when:
         def result = sut.sendSMSAuthCode("01049249971")

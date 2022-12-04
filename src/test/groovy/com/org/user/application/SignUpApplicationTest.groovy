@@ -3,6 +3,8 @@ package com.org.user.application
 import com.org.user.config.jwt.JwtTokenProvider
 import com.org.user.entity.User
 import com.org.user.exception.SignUpException
+import com.org.user.model.constraint.TimeConstraint
+import com.org.user.model.dto.TokenDto
 import com.org.user.model.dto.UserDto
 import com.org.user.service.UserService
 import com.org.user.util.UserConverter
@@ -20,8 +22,9 @@ class SignUpApplicationTest extends Specification {
 
     def "verify sign up normal case"() {
         given:
-        String token = jwtTokenProvider.generate("k1b219@naver.com")
-        UserDto dto = UserDto.builder().email("k1b219@naver.com").password("1234").accessToken(token).build()
+        String accessToken = jwtTokenProvider.generate("k1b219@naver.com", TimeConstraint.ACCESS_TOKEN_DURATION)
+        TokenDto token = TokenDto.builder().accessToken(accessToken).build()
+        UserDto dto = UserDto.builder().email("k1b219@naver.com").password("1234").tokenDto(token).build()
         when:
         UserDto result = sut.signUp(dto)
 
@@ -32,8 +35,9 @@ class SignUpApplicationTest extends Specification {
 
     def "verify sign up Access Token is invalid case"() {
         given:
-        String token = jwtTokenProvider.generate("k1b219@naver.com") + "someInvalidTokenCharacter"
-        UserDto dto = UserDto.builder().email("k1b219@naver.com").password("1234").accessToken(token).build()
+        String accessToken = jwtTokenProvider.generate("k1b219@naver.com", TimeConstraint.ACCESS_TOKEN_DURATION) + "someInvalidTokenCharacter"
+        TokenDto token = TokenDto.builder().accessToken(accessToken).build()
+        UserDto dto = UserDto.builder().email("k1b219@naver.com").password("1234").tokenDto(token).build()
         when:
         UserDto result = sut.signUp(dto)
 
@@ -45,8 +49,9 @@ class SignUpApplicationTest extends Specification {
 
     def "verify sign up duplicated email exist case"() {
         given:
-        String token = jwtTokenProvider.generate("k1b219@naver.com")
-        UserDto dto = UserDto.builder().email("k1b219@naver.com").password("1234").accessToken(token).build()
+        String accessToken = jwtTokenProvider.generate("k1b219@naver.com", TimeConstraint.ACCESS_TOKEN_DURATION)
+        TokenDto token = TokenDto.builder().accessToken(accessToken).build()
+        UserDto dto = UserDto.builder().email("k1b219@naver.com").password("1234").tokenDto(token).build()
         User user = User.builder().name("k1b219@naver.com").password("1234").build()
         userService.findByEmail("k1b219@naver.com") >> user
         when:
@@ -60,8 +65,9 @@ class SignUpApplicationTest extends Specification {
 
     def "verify change password norma case"() {
         given:
-        String token = jwtTokenProvider.generate("k1b219@naver.com")
-        UserDto dto = UserDto.builder().email("k1b219@naver.com").phoneNumber("01049249971").password("after").accessToken(token).build()
+        String accessToken = jwtTokenProvider.generate("k1b219@naver.com", TimeConstraint.ACCESS_TOKEN_DURATION)
+        TokenDto token = TokenDto.builder().accessToken(accessToken).build()
+        UserDto dto = UserDto.builder().email("k1b219@naver.com").phoneNumber("01049249971").password("after").tokenDto(token).build()
         User user = User.builder().name("k1b219@naver.com").password("before").build()
         userService.findByPhoneNumber("01049249971") >> user
         when:
@@ -73,8 +79,9 @@ class SignUpApplicationTest extends Specification {
 
     def "verify change password access token invalid case"() {
         given:
-        String token = jwtTokenProvider.generate("k1b219@naver.com") + "someInvalidTokenCharacter"
-        UserDto dto = UserDto.builder().email("k1b219@naver.com").phoneNumber("01049249971").password("after").accessToken(token).build()
+        String accessToken = jwtTokenProvider.generate("k1b219@naver.com", TimeConstraint.ACCESS_TOKEN_DURATION) + "someInvalidTokenCharacter"
+        TokenDto token = TokenDto.builder().accessToken(accessToken).build()
+        UserDto dto = UserDto.builder().email("k1b219@naver.com").password("1234").tokenDto(token).build()
         User user = User.builder().name("k1b219@naver.com").password("before").build()
         userService.findByPhoneNumber("01049249971") >> user
         when:

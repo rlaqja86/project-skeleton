@@ -1,6 +1,7 @@
 package com.org.user.application
 
 import com.org.user.entity.User
+import com.org.user.model.dto.TokenDto
 import com.org.user.model.dto.UserDto
 import com.org.user.service.UserService
 import com.org.user.util.UserConverter
@@ -20,11 +21,13 @@ class UserApplicationTest extends Specification {
         given:
         User user = User.builder().email("k1b219@naver.com").build()
         service.findByEmail("k1b219@naver.com") >> user
+        TokenDto token = TokenDto.builder().accessToken("access").refreshToken("refresh").build()
         when:
-        UserDto userDto = application.findByEmail("k1b219@naver.com","token")
+        UserDto userDto = application.findByEmail("k1b219@naver.com",token)
         then:
         userDto.getEmail() == "k1b219@naver.com"
-        userDto.getAccessToken() == "token"
+        userDto.getTokenDto().getAccessToken() == "access"
+        userDto.getTokenDto().getRefreshToken() == "refresh"
     }
 
 
