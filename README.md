@@ -17,7 +17,7 @@ Spock,
 
 4. (실제로는 SMS로 코드를 받겠지만) SMS코드와 accessToken을 Response로 받습니다.
 
-5. 유저는 코드가 유효한 1분내 발급받은 accessToken과 SMS코드로 최종 인증 시도를 보냅니다. 이때 회원 가입이나 비밀번호 교체 등 원하는 Command도 같이 보냅니다. 해당 command에 따라 nextUrl이 command에 따에 제공됩니다.
+5. 유저는 코드가 유효한 1분내 발급받은 accessToken과 SMS코드로 최종 인증 시도를 보냅니다. 이때 회원 가입이나 비밀번호 교체 등 원하는 Command도 같이 보냅니다. 해당 command에 따라 nextUrl이 command에 맞 제공됩니다.
 
 6. accessToken이 유효하고 redis에 요청이 온 phoneNumber에 해당하는 sms코드가 있다면 이를 비교합니다. 하지만 코드가 유효하지 않거나 1분이 지나 만료된 경우 예외를 발생시킵니다.
 
@@ -52,9 +52,9 @@ AbstractAuthenticationToken를 구현한 CustomEmailPasswordToken을 생성합�
 
 6. 그럼 앞으로 Client는 해당 JWT Token을 accessToken으로 사용, 헤더에 포함해 인증을 대신할 수 있게 됩니다.
 
-7. l0분이 지나 accessToken이 expired되었을때 client는 refreshToken을 사용해 새 accessToken을 받습니다. refreshToken의 만료기간은 1주로 매우 깁니다.
+7. 일정 시간이 지나 accessToken이 expired되었을때 client는 refreshToken을 사용해 새 accessToken을 받습니다. refreshToken의 만료기간은 1주로 매우 깁니다.
  
-인증
+###인증
 
 1. 로그인 시 받은 AccessToken을 사용합니다. AccessToken을 Authorization필드에 Bearer 타입으 넣어 /auth/가 포함되지 않은 모든 api 요청에 사용됩니다.
 
