@@ -76,11 +76,70 @@ AbstractAuthenticationToken를 구현한 CustomEmailPasswordToken을 생성합�
 
 Spring Security와 JWT토큰을 이용한 인증 정책에 구현을 집중했습니다. 기본적으로 accessToken과 refreshToken으로 인증이 이뤄집니다. 최초 유저가 로그인 후
 accessToken과 RefreshToken이 제공되며 accessToken으로 인증을 진행하다가 토큰이 만료된 경우 refreshToken으로 valid함을 확인하고 다시 accessToken을 받아
-로그인을 유지하는 정책을 적용했습니다.
+로그인을 유지하는 정책을 적용했습니다. 
+
+accessToken 재발행의 경우 refreshToken을 검사 후 accessToken을 재 발행하는 로직만 구현되어있고. accessToken이 만료됨을 판단하는 것은 client에 위임하는 것으로 가정했습니다.
 
 SMS로 문자를 보내는 부분은 구현되어 있지 않습니다. 대신 테스트를 용이하게 하기 위해 최초 번호 인증시 response에 토큰과 더불어 sms코드를 보냅니다.
 
 
+#요청 샘플
+
+####get SMS Code (POST http://localhost:8080/api/v1/auth/sign-up/reset/password)
+
+curl -X POST http://localhost:8080/api/v1/auth/sms?phoneNumber=01049249971
+
+####verify SMS Code (POST http://localhost:8080/api/v1/auth/sms/code)
+
+curl --header "Content-Type: application/json" --request POST --data '{
+"signUpNextUrl":"kim beom",
+"accessToken":"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwMTA0OTI0OTk3MSIsImlhdCI6MTY3MDE0NTUwOSwiZXhwIjoxNjcwMTQ2MTA5fQ.AdObvV5y9VnedMlxehZ_Khvoq3UF_sA3sDi5s1Vt9NM", 
+"smsVerificationCode" : "0622", 
+"command" : "REGISTRATION"
+}' localhost:8080/api/v1/auth/sms/code
+                                                                      
+                                                      
+#### sign up (POST http://localhost:8080/api/v1/auth/sign-up/registration)
+
+curl --header "Content-Type: application/json" --request POST --data '{
+"email":"k1b2119@naver.com",
+"nickName":"beom",
+"password" :"1234",
+"name":"beom",
+"phoneNumber":"01049249971",
+"tokenDto": {
+    "accessToken" : "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwMTA0OTI0OTk3MSIsImlhdCI6MTY3MDE0NTUwOSwiZXhwIjoxNjcwMTQ2MTA5fQ.AdObvV5y9VnedMlxehZ_Khvoq3UF_sA3sDi5s1Vt9NM",
+    "refreshToken" : ""
+}
+}' localhost:8080/api/v1/auth/sign-up/registration
+
+ 
+#### change password (POST http://localhost:8080/api/v1/auth/sign-up/reset/password)
+
+curl --header "Content-Type: application/json" --request POST --data '{
+"email":"",
+"nickName":"",
+"password" :"newpassword",
+"name":"",
+"phoneNumber":"01049249971",
+"tokenDto": {
+    "accessToken" : "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwMTA0OTI0OTk3MSIsImlhdCI6MTY3MDE0NTUwOSwiZXhwIjoxNjcwMTQ2MTA5fQ.AdObvV5y9VnedMlxehZ_Khvoq3UF_sA3sDi5s1Vt9NM",
+    "refreshToken" : ""
+}
+}' localhost:8080/api/v1/auth/sign-up/reset/password
 
 
+#### login (POST http://localhost:8080/api/v1/auth/login)
 
+curl --header "Content-Type: application/json" --request POST --data '{
+"email":"k1b219@naver.com",
+"password" :"1234"
+}' localhost:8080/api/v1/auth/login
+
+#### token reissue (GET http://localhost:8080/api/v1/auth/token/reissue)
+
+curl --request GET localhost:8080/api/v1/auth/token/reissue?refreshToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJrMWIyMTlAbmF2ZXIuY29tIiwiaWF0IjoxNjcwMTQyOTk0LCJleHAiOjE2NzA3NDc3OTR9.D_3jGYf4YuTvdLBMGVile426rq8BdHcw1hKgPeG9lyw
+
+#### Test (GET http://localhost:8080/api/v1/hello)
+
+curl --header "Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJrMWIyMTlAbmF2ZXIuY29tIiwiaWF0IjoxNjcwMTQyOTk0LCJleHAiOjE2NzA3NDc3OTR9.D_3jGYf4YuTvdLBMGVile426rq8BdHcw1hKgPeG9lyw" --request GET localhost:8080/api/v1/hello
