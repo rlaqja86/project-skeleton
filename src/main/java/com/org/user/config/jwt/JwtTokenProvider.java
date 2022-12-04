@@ -11,12 +11,11 @@ import java.util.Date;
 public class JwtTokenProvider {
 
     private static final String SECRET = "token-secret";
-    private static final int EXPIRATION_MS = 600000;
 
-    public String generate(String key) {
+    public String generate(String key, int tokenExpiredTime) {
 
         Date now = new Date();
-        Date expiredTime = new Date(now.getTime() + EXPIRATION_MS);
+        Date expiredTime = new Date(now.getTime() + tokenExpiredTime);
 
         return Jwts.builder()
                 .setSubject(key)

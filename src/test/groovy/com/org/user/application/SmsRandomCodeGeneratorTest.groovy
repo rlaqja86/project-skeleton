@@ -10,5 +10,7 @@ class SmsRandomCodeGeneratorTest extends Specification {
         def x = sut.generateRandomCode()
         then:
         x.length() == 4
+        x != null
+        x.class == String.class
     }
 }

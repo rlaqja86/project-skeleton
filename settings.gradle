@@ -1,2 +1,3 @@
 rootProject.name = 'template-project'
+include 'test'
 

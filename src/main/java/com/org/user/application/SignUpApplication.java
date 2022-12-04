@@ -6,6 +6,7 @@ import com.org.user.exception.SignUpException;
 import com.org.user.service.UserService;
 import com.org.user.util.UserConverter;
 import com.org.user.model.dto.UserDto;
+import io.jsonwebtoken.lang.Assert;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,10 +26,11 @@ public class SignUpApplication {
 
     public UserDto signUp(UserDto userDto) {
         try {
-            jwtTokenProvider.validate(userDto.getAccessToken());
+            Assert.notNull(userDto.getTokenDto());
+            jwtTokenProvider.validate(userDto.getTokenDto().getAccessToken());
             checkEmailIsNotDuplicated(userDto.getEmail());
-
-            return converter.convert(userService.save(converter.convert(userDto)));
+            userService.save(converter.convert(userDto));
+            return userDto;
         } catch (Exception exception) {
             log.error("[SignUpApplication.signUp] failed to save user", exception);
             throw new SignUpException(exception.getMessage());
@@ -37,7 +39,8 @@ public class SignUpApplication {
 
     public UserDto changePassword(UserDto userDto) {
         try {
-            jwtTokenProvider.validate(userDto.getAccessToken());
+            Assert.notNull(userDto.getTokenDto());
+            jwtTokenProvider.validate(userDto.getTokenDto().getAccessToken());
             User user = userService.findByPhoneNumber(userDto.getPhoneNumber());
             user.setPassword(passwordEncoder.encode(userDto.getPassword()));
 

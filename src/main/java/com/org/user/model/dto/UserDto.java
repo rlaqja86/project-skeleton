@@ -15,5 +15,5 @@ public class UserDto {
     private String password;
     private String name;
     private String phoneNumber;
-    private String accessToken;
+    private TokenDto tokenDto;
 }
